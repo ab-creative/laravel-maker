@@ -1,4 +1,14 @@
-<tr>
-    <td>__LABEL__</td>
-    <td>{{ $__MODEL.VAR.NAME__->__FIELD__ }}</td>
-</tr>
+
+    <div class="col-sm-3">
+         <div class="show-item pull-right">
+             __LABEL__:
+         </div>
+
+     </div>
+     <div class="col-sm-3">
+
+         <div class="show-item">
+             {{ $__MODEL.VAR.NAME__->__FIELD__ }}
+
+         </div>
+     </div>

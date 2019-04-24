@@ -10,7 +10,26 @@
     <div class="form-group">
    
     {!! Form::text('value', null, ['class' => 'form-control', 'placeholder' => 'Value']) !!}
-    
+
+    {{--The following code in the foreach loop is for filter fields that come from a select control. The admin control needs to pass a variable with the values containing the same name as the filter_fields value. --}}
+    {{--Jquery will then display or hide this selection box. --}}
+
+        @foreach($filter_fields as $key => $field)
+
+            @if (isset($$key))
+
+               <select class="form-control" id="{{$key}}" name='value' style="min-width:168px;display:none">
+                   @foreach($$key as $value)
+
+                        <option  value="{{$value['id']}}">{{ $value['value'] }}</option>
+
+                   @endforeach
+               </select>
+
+            @endif
+
+        @endforeach
+
     </div>
 
     <input class="btn btn-primary" type="submit" name="filter" value="Filter" />

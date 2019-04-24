@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('admin.layout.app')
 
 @section('content')
     <div class="container-fluid">
@@ -43,4 +43,41 @@
         </div>
       </div>
     </div>
+@endsection
+@section('page-script')
+    <script>
+
+// This script is used to add drop down lists in the search filter field. Update the Model to include dropdown list fields such as mg_year_id and then update controller index method to include the data. See MgAwardAdminContoller in GFF for more info.
+        $(document).on('change', '#index-search-field', function (e) {
+
+            e.preventDefault();
+
+            var filter_array = new Array();
+
+            @foreach($filter_fields as $key => $field)
+
+                @if (isset($$key))
+
+                    filter_array.push('{{ $key }}');
+
+                @endif
+
+            @endforeach
+
+            if(jQuery.inArray(this.value, filter_array) !== -1) {
+
+                $('#index-search-value').hide();
+
+                $('#'+ this.value).show();
+
+            } else {
+                $('#index-search-value').show();
+
+                jQuery.each(filter_array, function() {
+                    $('#'+ this).hide();
+                });
+            }
+        });
+    </script>
+
 @endsection

@@ -41,7 +41,7 @@ class ShowBuilder extends BaseFieldBuilder implements ShowInterface {
         $output = $this->filesystem->get($stub);
     
         foreach ($vars as $key => $value) {
-    
+
             $key = '__' . strtoupper($key) . '__';
     
             if (strpos($output, $key) !== false) {

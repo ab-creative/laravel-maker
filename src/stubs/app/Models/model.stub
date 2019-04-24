@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class __MODEL.NAME__ extends BaseModel
 {
@@ -13,6 +13,8 @@ class __MODEL.NAME__ extends BaseModel
      * @var string
      */
     protected $table = '__MODEL.TABLE__';
+
+    use LogsActivity;
     
 __METHOD.MODEL.RELATIONSHIPS__
     
@@ -71,8 +73,37 @@ __METHOD.MODEL.RELATIONSHIPS__
         __MODEL.FILTER.FIELDS__
         
     ];
+
+    /**
+     * An array of fields from a join table to show in the admin list view filter
+     *
+     * @var array
+     */
+
+    protected $filter_fields_array = [
+
+
+    ];
+
+    /**
+     * An array of fields to show from a join table in the admin list view filter
+     *
+     * key = field_name
+     * value = relationship_method
+     *
+     * @var array
+     */
+    protected $filter_fields_array_joins = [
+
+
+    ];
+
+
     
-    
+    public function scopeIsLive($query)
+        {
+            $query->where('is_live', 1);
+        }
     
     
     

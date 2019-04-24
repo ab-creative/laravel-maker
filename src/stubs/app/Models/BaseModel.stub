@@ -11,32 +11,7 @@ use Illuminate\Database\Eloquent\Collection;
 abstract class BaseModel extends Model
 {
     
-    /**
-     * Filter the results or just return a list
-     * 
-     * @param Request $request
-     * @return unknown
-     */
-    public function indexFilter(Request $request, $eagerload = [])
-    {
-        
-        $limit = config('maker.limit');
-        
-        $query = $request->query();
-        
-        if ($this->useFilter($query)) {
-            
-            $data = $this->with($eagerload)->where($query['field'], '=', $query['value'])->paginate($limit);
- 
-        } else {
-            
-            $data = $this->with($eagerload)->paginate($limit);
 
-        }
-        
-        return $data;
-        
-    }
     
     /**
      * Is the filter request valid?
@@ -84,8 +59,59 @@ abstract class BaseModel extends Model
         }
         
     }
-      
-    
- 
+
+    /**
+     * Return the fileterable fields from the model
+     *
+     * @return array
+     */
+    public function filterFieldsArray()
+    {
+        if (isset($this->filter_fields_array)) {
+
+            return $this->filter_fields_array;
+
+        } else {
+
+            return NULL;
+
+        }
+
+    }
+
+    /**
+     * Return the fileterable fields from the model
+     *
+     * @return array
+     */
+    public function filterFieldsArrayJoins()
+    {
+        if (isset($this->filter_fields_array_joins)) {
+
+            return $this->filter_fields_array_joins;
+
+        } else {
+
+            return NULL;
+
+        }
+
+    }
+
+
+    public function getCreatedAtAttribute()
+    {
+       if ($this->attributes['created_at']) {
+            return Carbon::parse($this->attributes['created_at'])->format('d/m/Y H:i');
+        }
+    }
+    public function getUpdatedAtAttribute($value)
+    {
+        if ($this->attributes['updated_at']) {
+            return Carbon::parse($this->attributes['updated_at'])->format('d/m/Y H:i');
+        }
+    }
+
+
     
 }

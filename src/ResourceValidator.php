@@ -42,7 +42,7 @@ class ResourceValidator {
      */
     public function validateColumn($key, $var)
     {
-        
+
         try {
         
             $r = new \ReflectionMethod($this->className, $var['type']);
@@ -66,7 +66,11 @@ class ResourceValidator {
             }
         
         } catch (\ReflectionException $e) {
-        
+
+            var_dump($var);
+
+            var_dump($this->className);
+
             throw new ResourceValidatorException("Type '" . $var['type'] . "' for field  '" . $key . "' is not a valid laravel column type. Please refer to https://laravel.com/docs/migrations#creating-columns.");
         
         }

@@ -166,7 +166,7 @@ return [
     
         'index' => ['name', 'title'],
         'show' => ['name', 'title', 'content', 'created_at'],
-        'admin.index' => ['id', 'name', 'title', 'live', 'active', 'published', 'created_at', 'updated_at'],
+        'admin.index' => ['name', 'title', 'live', 'active', 'published', 'created_at', 'updated_at'],
         'admin.show' => [] // show all
     ],
     

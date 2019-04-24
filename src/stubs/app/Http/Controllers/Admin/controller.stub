@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Controllers\Admin\BaseAdminController;
 use App\Http\Requests\Store__MODEL.NAME__Request;
 use App\Http\Requests\Update__MODEL.NAME__Request;
+use Illuminate\Support\Facades\Cache;
 
 class __CONTROLLER.NAME__AdminController extends BaseAdminController
 {
@@ -20,14 +21,82 @@ class __CONTROLLER.NAME__AdminController extends BaseAdminController
     public function index(Request $request)
     {
 
-        $eagerload = [];
+       $limit = config('constants.pagination.items_per_page');
 
-        $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__Facade::indexFilter($request, $eagerload);
-        
-        $filter_fields = __MODEL.NAME__Facade::filterFields();
+       $query = $request->query();
 
-        return view('__RESOURCE.VIEW.NAMESPACE__.__RESOURCE.VIEW.DIRECTORY__.index', compact('__MODEL.VAR.NAME.PLURAL__', 'filter_fields'));
+       $eagerload = [];
+
+       $sortorder = [];
+
+       if (__MODEL.NAME__Facade::useFilter($query)) {
+
+           $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::with($eagerload)->where($query['field'], 'like', '%' . $query['value'] . '%');
+
+       } else {
+
+           $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::with($eagerload);
+
+       }
+
+
+       if (__MODEL.NAME__Facade::useFilter($query)) {
+
+                   $filter_fields_array = __MODEL.NAME__Facade::filterFieldsArray();
+
+                   $filter_fields_array_joins = __MODEL.NAME__Facade::filterFieldsArrayJoins();
+
+                   if (array_key_exists($query['field'], $filter_fields_array)) {
+
+                       // If the filter requires testing a field from the relation
+                       if (array_key_exists($query['field'], $filter_fields_array_joins)) {
+
+                           $queryfield = $query['field'];
+
+                           $queryvalue = $query['value'];
+
+                           $relation = $filter_fields_array_joins[$query['field']];
+
+                           $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::whereHas($relation, function ($query) use ($queryfield, $queryvalue) {
+                               $query->where($queryfield, $queryvalue);
+                           })
+                           ->with($eagerload);
+
+                       } else {
+
+                           // If the filter was from a dropdown list
+                           $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::with($eagerload)->where($query['field'], $query['value']);
+
+                       }
+                   } else {
+
+                       // If the field was a text search from the main
+                       $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::with($eagerload)->where($query['field'], 'like', '%' . $query['value'] . '%');
+
+                   }
+
+               } else {
+
+                   $__MODEL.VAR.NAME.PLURAL__ = __MODEL.NAME__::with($eagerload);
+
+               }
+
+       }
+
+       foreach ($sortorder as $s) {
+
+           $__MODEL.VAR.NAME.PLURAL__ = $__MODEL.VAR.NAME.PLURAL__->orderBy($s);
+
+       }
+
+       $__MODEL.VAR.NAME.PLURAL__ = $__MODEL.VAR.NAME.PLURAL__->paginate($limit);
+
+       $filter_fields = __MODEL.NAME__Facade::filterFields();
+
+       return view('__RESOURCE.VIEW.NAMESPACE__.__RESOURCE.VIEW.DIRECTORY__.index', compact('__MODEL.VAR.NAME.PLURAL__', 'filter_fields'));
     }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -54,6 +123,8 @@ class __CONTROLLER.NAME__AdminController extends BaseAdminController
 
 
         $__MODEL.VAR.NAME__ = __MODEL.NAME__::create($request->all());
+
+        Cache::forget('__MODEL.VAR.NAME__');
 
         return redirect()->route('__ROUTE.PREFIX____ROUTE.SLUG__.index')
         ->withSuccess('Thank you for creating a __MODEL.NAME.HUMAN__');
@@ -97,6 +168,8 @@ class __CONTROLLER.NAME__AdminController extends BaseAdminController
     {
          
         $__MODEL.VAR.NAME__->update($request->all());
+
+        Cache::forget('__MODEL.VAR.NAME__');
 
         return redirect()->route('__ROUTE.PREFIX____ROUTE.SLUG__.index')
         ->withSuccess('Thank you for updating a __MODEL.NAME.HUMAN__');

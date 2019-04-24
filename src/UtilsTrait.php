@@ -16,7 +16,7 @@ trait UtilsTrait {
     
             $this->command->filesystem->makeDirectory($path, $mode, true);
     
-            $this->command->info('Created directory: ' . $path);
+            $this->command->info('Created directory: ' . $path . ' using mode ' . $mode);
     
         }
     
@@ -29,13 +29,10 @@ trait UtilsTrait {
      */
     protected function createParentDirectoryPath($file)
     {
-    
         $dir = dirname($file);
     
         $this->makeDirectory($dir);
     
     }
-    
-    
-    
+
 }

@@ -181,7 +181,7 @@ class BaseFieldBuilder {
      */
     public function map($vars) 
     {
-        
+
         if (isset($this->map[$vars['field_type']])) {
             
             $vars['field_type'] = $this->map[$vars['field_type']];
@@ -197,7 +197,7 @@ class BaseFieldBuilder {
             
             
         }
-        
+
         if (! in_array($vars['field_type'], $this->form_field_types)) {
             
             $vars['field_type'] = 'text';

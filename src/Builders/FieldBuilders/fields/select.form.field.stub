@@ -1,5 +1,11 @@
 
 <div class="form-group {{  ($errors->has('__FIELD__') ? ' has-error' : '') }}">
-    {!! Form::label('__FIELD__', '__LABEL__:', ['class' => 'control-label']) !!}
-    {!! Form::select('__FIELD__', __OPTIONS__, null, ['class' => 'form-control', 'placeholder' => '__PLACEHOLDER__']) !!}
+   <div class="row">
+       <div class="col">
+           {!! Form::label('__FIELD__', '__LABEL__:', ['class' => 'control-label pull-right col-form-label']) !!}
+       </div>
+       <div class="col">
+           {!! Form::select('__FIELD__', __OPTIONS__, null, ['class' => 'form-control', 'placeholder' => '__PLACEHOLDER__']) !!}
+       </div>
+   </div>
 </div>
